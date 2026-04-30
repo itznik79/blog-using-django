@@ -1,0 +1,50 @@
+version: "3.9"
+
+services:
+  backend:
+    build: .
+    # 👉 Tells Docker to build an image using the Dockerfile in current folder (.)
+    # This is YOUR custom backend image (not a prebuilt one)
+
+    container_name: blog-backend
+    # 👉 Human-readable name for the container
+    # Helps in debugging: docker ps, docker logs blog-backend
+
+    command: python manage.py runserver 0.0.0.0:8000
+    # 👉 Overrides default CMD from Dockerfile
+    # Runs Django development server
+    # 0.0.0.0 = accept requests from outside container (IMPORTANT)
+
+    volumes:
+      - .:/app
+    # 👉 Sync local code with container
+
+    ports:
+      - "8000:8000"
+    # 👉 Access app at http://localhost:8000
+
+    depends_on:
+      - db
+      - redis
+    # 👉 Start db & redis before backend
+
+    env_file:
+      - .env
+    # 👉 Load env variables
+
+  db:
+    image: postgres:15
+    container_name: blog-db
+    restart: always
+    environment:
+      POSTGRES_DB: blog
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:7
+    container_name: blog-redis
+    ports:
+      - "6379:6379"
