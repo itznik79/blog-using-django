@@ -18,7 +18,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
+    'ckeditor',
+    'apps.engagement',
     'apps.accounts',  # our accounts app
+    'apps.blogs',
 ]
 
 # ⚙️ MIDDLEWARE
@@ -84,6 +87,28 @@ USE_TZ = True
 
 # 📁 STATIC FILES
 STATIC_URL = 'static/'
+
+# Media (for CKEditor uploads)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+# CKEditor upload path
+CKEDITOR_UPLOAD_PATH = 'uploads/'
+
+# Bleach settings for server-side sanitization of HTML content
+BLEACH_ALLOWED_TAGS = [
+    'p', 'br', 'strong', 'em', 'ul', 'ol', 'li', 'a', 'img',
+    'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote', 'code', 'pre',
+    'span', 'div', 'table', 'thead', 'tbody', 'tr', 'th', 'td'
+]
+
+BLEACH_ALLOWED_ATTRIBUTES = {
+    '*': ['class'],
+    'a': ['href', 'title', 'target', 'rel'],
+    'img': ['src', 'alt', 'title', 'width', 'height'],
+}
+
+BLEACH_STRIP = True
 
 # 🔑 DEFAULT PRIMARY KEY FIELD
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
